@@ -1,3 +1,5 @@
-# Python module for repeated matrix game
+# Repeated matrix game
 
-* [繰り返し囚人のジレンマゲーム](./PrisonersDilemma)
+Python module for repeated matrix game.  
+
+* [繰り返し囚人のジレンマゲーム]()
