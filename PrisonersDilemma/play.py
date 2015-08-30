@@ -236,17 +236,11 @@ class RepeatedMatrixGame(object):
 
 if __name__ == '__main__':
     payoff = np.array([[2, 0], [3, 1]])
-    playtimes = randint(1000, 2000)
-
     discount_v = 0.9999
-    for i in range(100):
-        playtimes = geometric(1 - discount_v)
-        print(playtimes)
+    playtimes = geometric(1 - discount_v)
 
-    """
     strategies = [grim_trigger, random_strategy, allC, allD, alternate, two_one, tit_for_tat, probability]
     game = RepeatedMatrixGame(payoff, strategies, playtimes)
     game.play()
-    """
 
 
