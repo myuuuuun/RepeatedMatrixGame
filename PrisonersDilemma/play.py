@@ -1,5 +1,4 @@
 #-*- encoding: utf-8 -*-
-
 '''
 Simulate finite repeated symmetric matrix game.
 Copyright (c) 2015 @myuuuuun
