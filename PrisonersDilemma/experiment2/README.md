@@ -144,7 +144,7 @@
 # テンプレート
 class MyStrategy():
     def __init__(self, random_state=None):
-        # random_stateオブジェクトのインスタンスを受け取る
+        # RandomStateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
         if random_state is None:
             random_state = np.random.random_state()
@@ -186,9 +186,9 @@ class MyStrategy():
         self.signals.append(signal)
 ```
 
-* \_\_init\_\_()では、random_stateクラスのインスタンスを受け取ることができるようにしてください。何らかの確率分布を用いて戦略を決定する場合は、
-再現性を確保するため、このインスタンスのメソッドを使用してください。random_stateクラスで使用できる確率変数は
-[NumPyのドキュメント](http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.random_state.html)
+* \_\_init\_\_()では、RandomStateクラスのインスタンスを受け取ることができるようにしてください。何らかの確率分布を用いて行動を決定する場合は、
+再現性を確保するため、このインスタンスのメソッドを使用してください。RandomStateクラスで使用できる確率変数は
+[NumPyのドキュメント](http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.RandomState.html)
 を参照してください。
 
 

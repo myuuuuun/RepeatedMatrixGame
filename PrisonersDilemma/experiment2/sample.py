@@ -8,7 +8,7 @@ import numpy as np
 # テンプレート
 class MyStrategy():
     def __init__(self, random_state=None):
-        # random_stateオブジェクトのインスタンスを受け取る
+        # RandomStateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
         if random_state is None:
             random_state = np.random.random_state()
