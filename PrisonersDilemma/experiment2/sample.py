@@ -15,28 +15,39 @@ class MyStrategy():
         # RandomStateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
         self.RandomState = RandomState
-
+        # 自分の行動の履歴
+        self.my_history = []
         # 過去の全てのシグナル
-        self.my_signals = []
-        self.opponent_signals = []
+        self.signals = []
 
 
     # 各ステージゲームの実行時に呼び出されるメソッド
     # その期の行動を0（=協調）, または1（=攻撃）のいずれかから選ぶ
     def play(self):
-        return self.RandomState.randint(0, 1)
+        # 第1期は協調
+        if len(self.signals) < 1:
+            self.my_history.append(0)
+            return 0
+
+        # 前期のシグナル
+        prior_signal = self.signals[-1]
+
+        # 前期のシグナルがBadの時、20%の割合でこちらも攻撃する
+        epsilon = self.RandomState.uniform()
+        if epsilon > 0.8 and prior_signal == 1:
+            self.my_history.append(1)
+            return 1
+        
+        else:
+            self.my_history.append(0)
+            return 0
 
 
     # 各期のゲーム終了時に呼び出されるメソッド
     def get_signal(self, signal):
-        # 前期のゲームのシグナルを配列形式で受け取る
-        # signal = [前期の自分の行動のシグナル, 相手の行動のシグナル]
-        my_signal = signal[0]
-        opponent_signal = signal[1]
-
+        # 前期のゲームのシグナルを受け取る
         # 受け取ったシグナルをシグナルの履歴に追加
-        self.my_signals.append(my_signal)
-        self.opponent_signals.append(opponent_signal)
+        self.signals.append(signal)
 
 
 # 常に協調
@@ -63,21 +74,9 @@ class AllD():
         pass
 
 
-# しっぺ返し
-class TitForTat():
-    def __init__(self, RandomState):
-        # 相手の1期前のシグナル
-        self.opponent_signal = 0
-
-    def play(self):
-        return self.opponent_signal
-
-    def get_signal(self, signal):
-        # シグナルを更新
-        self.opponent_signal = signal[1]
-
 
 # 最初は協調を続け、相手が1度でも攻撃してきたら以後ずっと攻撃
+# imperfect monitoringの場合は、シグナルが1になれば、以降ずっと攻撃
 class GrimTrigger():
     def __init__(self, RandomState):
         # 相手が協力的かどうかのflag
@@ -92,8 +91,8 @@ class GrimTrigger():
             return 1
 
     def get_signal(self, signal):
-        if signal[1] == 1:
-            self.cooperation_flag = 0
+        if signal == 1:
+            self.cooperation_flag = False
 
 
 # 協調と攻撃を交互に繰り返す

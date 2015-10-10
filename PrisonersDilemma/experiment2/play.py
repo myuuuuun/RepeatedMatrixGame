@@ -13,7 +13,7 @@ from random import randint, random
 import numpy as np
 from numpy.random import geometric
 import sys
-from sample import AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy
+from sample import AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 np.set_printoptions(precision=3)
@@ -193,17 +193,18 @@ class RepeatedMatrixGame(object):
 
             # シグナルを作成
             if mtype == "perfect":
-                signal1 = [action1, action2]
-                signal2 = [action2, action1]
+                signal1 = action2
+                signal2 = action1
 
             elif mtype == "public":
                 signal = self.signal([action1, action2])
-                signal1 = [signal[0], signal[1]]
-                signal2 = [signal[1], signal[0]]
+                signal1 = signal
+                signal2 = signal
 
             elif mtype == "private":
-                signal1 = self.signal([action1, action2])
-                signal2 = self.signal([action2, action1])
+                signals = self.signal([action1, action2])
+                signal1 = signals[0]
+                signal2 = signals[1]
 
             else:
                 raise ValueError
@@ -278,9 +279,25 @@ if __name__ == '__main__':
     ts_length = RandomState.geometric(p=1-discount_v)
     repeat = 10
 
-    def signal_dist(actions):
+
+    def public_signal_dist(actions):
+        prob = RandomState.uniform()
+        if actions[0] == 0 and actions[1] == 0:
+            return 0 if prob < 0.9 else 1
+
+        elif (actions[0] == 0 and actions[1] == 1) or (actions[0] == 1 and actions[1] == 0):
+            return 0 if prob < 0.5 else 1
+
+        elif actions[0] == 1 and actions[1] == 1:
+            return 0 if prob < 0.2 else 1
+
+        else:
+            raise ValueError
+
+
+    def private_signal_dist(actions):
         pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
-        signal_probs = [[.9, .02, .02, .06], [.02, .9, .06, .02], [.02, .06, .9, .02], [.06, .02, .02, .9]]
+        signal_probs = [[.9, .02, .02, .06], [.02, .06, .9, .02], [.02, .9, .06, .02], [.06, .02, .02, .9]]
         prob = RandomState.uniform()
         if actions[0] == 0 and actions[1] == 0:
             choice = RandomState.choice(4, p=signal_probs[0])
@@ -301,8 +318,8 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-    strategies = [AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy]
-    game = RepeatedMatrixGame(payoff, strategies, signal_dist, ts_length, repeat)
-    game.play(mtype="private", RandomState=RandomState)
+    strategies = [AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy]
+    game = RepeatedMatrixGame(payoff, strategies, public_signal_dist, ts_length, repeat)
+    game.play(mtype="public", RandomState=RandomState)
 
 

@@ -2,16 +2,16 @@
 from __future__ import division, print_function
 import unittest
 import numpy as np
-from sample import AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy
+from sample import MyStrategy, AllC, AllD, GrimTrigger, Alternate, RandomStrategy
 
 
 class TestStrategies(unittest.TestCase):
     def setUp(self):
-        self.Strategies = [AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy] # ここに自作のclassを入れる
+        self.Strategies = [MyStrategy, AllC, AllD, GrimTrigger, Alternate, RandomStrategy] # ここに自作のclassを入れる
         self.case1 = "Signal is empty(period 1)"
         self.case2 = [0, 1]
-        self.case3 = [[0, 0], [1, 1]]
-        self.case4 = [[1, 0], [0, 0], [0, 0], [0, 1], [1, 0]]
+        self.case3 = [1, 0]
+        self.case4 = [0, 1, 0, 1, 0, 0, 1]
 
         self.seed = 11451
         self.RandomState = np.random.RandomState(self.seed)
@@ -54,8 +54,8 @@ class TestStrategies(unittest.TestCase):
             S = Strategy(self.RandomState)
             for signal in self.case4:
                 S.get_signal(signal)
+                rst = S.play()
             
-            rst = S.play()
             self.assertIn(rst, (0, 1))
 
 
