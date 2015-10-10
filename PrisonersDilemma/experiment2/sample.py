@@ -121,7 +121,7 @@ class RandomStrategy():
         self.random_state = random_state
 
     def play(self):
-        return self.random_state.randint(0, 1)
+        return self.random_state.randint(0, 2)
 
     def get_signal(self, signal):
         pass
