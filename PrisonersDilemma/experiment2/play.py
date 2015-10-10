@@ -13,7 +13,7 @@ from random import randint, random
 import numpy as np
 from numpy.random import geometric
 import sys
-from sample import *
+from sample import AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 np.set_printoptions(precision=3)
@@ -127,7 +127,7 @@ class RepeatedMatrixGame(object):
         Number of repetition of games.
         If None or -1, pick random number from 1000 to 10000.
     '''
-    def __init__(self, payoff, strategies, ts_length=None, **kwargs):
+    def __init__(self, payoff, strategies, signal_dist, ts_length=None, repeat=1, **kwargs):
         # kwargs: discount factor, is_play_with_myself...
 
         # type and size checking of payoff
@@ -138,6 +138,10 @@ class RepeatedMatrixGame(object):
 
         # type checking of ts_length
         self.ts_length = is_valid_ts_length(ts_length)
+
+        self.repeat = repeat
+
+        self.signal = signal_dist
             
     def set_payoff(self, payoff):
         self.payoff, self.actlen = is_valid_payoff(payoff)
@@ -164,12 +168,14 @@ class RepeatedMatrixGame(object):
     def set_ts_length(self, ts_length):
         self.ts_length = is_valid_ts_length(ts_length)
 
+    def set_signal(self, signal_dist):
+        self.signal = signal_dist
 
 
-
-    def __play__(self, strategy1, strategy2, plot):
-        history1 = []
-        history2 = []
+    def __play__(self, strategy1, strategy2, mtype, RandomState, plot):
+        # インスタンス化
+        Strategy1 = strategy1(RandomState)
+        Strategy2 = strategy2(RandomState)
         score1 = 0
         score2 = 0
 
@@ -177,50 +183,71 @@ class RepeatedMatrixGame(object):
             plot_objs = self.plot_initialize()
 
         for i in range(self.ts_length):
-            action1 = strategy1(history1, history2)
-            action2 = strategy2(history2, history1)
+            # Stage gameをプレイ
+            action1 = Strategy1.play()
+            action2 = Strategy2.play()
 
-            """
-            print("----------------------")
-            print("{0} 期目".format(i+1))
-            m1 = "協調" if action1 == 0 else "攻撃"
-            m2 = "協調" if action2 == 0 else "攻撃"
-            print("プレイヤー1の行動は {0}".format(m1))
-            print("プレイヤー2の行動は {0}".format(m2))
-            print("----------------------\n")
-            """
+            # 利得を追加
+            score1 += self.payoff[action1][action2]
+            score2 += self.payoff[action2][action1]
 
-            history1.append(action1)
-            history2.append(action2)
+            # シグナルを作成
+            if mtype == "perfect":
+                signal1 = [action1, action2]
+                signal2 = [action2, action1]
+
+            elif mtype == "public":
+                signal = self.signal([action1, action2])
+                signal1 = [signal[0], signal[1]]
+                signal2 = [signal[1], signal[0]]
+
+            elif mtype == "private":
+                signal1 = self.signal([action1, action2])
+                signal2 = self.signal([action2, action1])
+
+            else:
+                raise ValueError
+
+            # シグナルを渡す
+            Strategy1.get_signal(signal1)
+            Strategy2.get_signal(signal2)
 
             if plot:
                 self.plot(plot_objs, [history1, history2])
 
-            score1 += self.payoff[action1][action2]
-            score2 += self.payoff[action2][action1]
-            
         return score1, score2
 
 
-    def play(self, plot=False):
+    def play(self, mtype="perfect", RandomState=None, plot=False):
+        if RandomState is None:
+            RandomState = np.random.RandomState()
+
         strlen = len(self.strategies)
         if strlen < 2:
-            print("To play, need at least 2 strategies functions.")
+            print("To play, need at least 2 strategies.")
             return
 
-        result = np.zeros((strlen, strlen), dtype=int)
+        result = np.zeros((strlen, strlen), dtype=float)
         count = 1
         print("Start")
         self.show_strategies()
         print("Time series length: {0}".format(self.ts_length))
+        print("Repeats: {0}".format(self.repeat))
         
         for i, str1 in enumerate(self.strategies):
             for j, str2 in enumerate(self.strategies[i+1:]):
-                score1, score2 = self.__play__(str1, str2, plot)
+                score1, score2 = 0, 0
+                for r in range(self.repeat):
+                    s1, s2= self.__play__(str1, str2, mtype, RandomState, plot)
+                    score1 += s1
+                    score2 += s2
+
+                score1 /= self.repeat
+                score2 /= self.repeat
                 print("-"*50)
                 print("Game {0}: \"{1}\" vs \"{2}\"".format(count, str1.__name__, str2.__name__))
-                print("stage score of", str1.__name__, ": " , score1)
-                print("stage score of", str2.__name__, ": " , score2)
+                print("average game score of {0}: {1:.3f}, per stage: {2:.3f}".format(str1.__name__, score1, score1/self.ts_length))
+                print("average game score of {0}: {1:.3f}, per stage: {2:.3f}".format(str2.__name__, score2, score2/self.ts_length))
                 result[i][i+j+1] = score1
                 result[i+j+1][i] = score2
                 count += 1;
@@ -239,17 +266,43 @@ class RepeatedMatrixGame(object):
         for i in range(strlen):
             s = ranking[i]
             print("{0}. \"{1}\"".format(i+1, self.strategies[s].__name__))
-            print("total points: {0}, average points per game: {1}, average points per stage: {2}"
+            print("total points: {0:.3f}, average points per game: {1:.3f}, average points per stage: {2:.3f}"
                 .format( total[s], total[s]/(strlen-1), total[s]/((strlen-1)*self.ts_length) ))
 
 
 if __name__ == '__main__':
-    payoff = np.array([[2, 0], [3, 1]])
-    discount_v = 0.9999
-    playtimes = geometric(1 - discount_v)
+    payoff = np.array([[4, 0], [5, 2]])
+    seed = 11451
+    RandomState = np.random.RandomState(seed)
+    discount_v = 0.97
+    ts_length = RandomState.geometric(p=1-discount_v)
+    repeat = 10
 
-    strategies = [grim_trigger, random_strategy, allC, allD, alternate, two_one, tit_for_tat, probability]
-    game = RepeatedMatrixGame(payoff, strategies, playtimes)
-    game.play()
+    def signal_dist(actions):
+        pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
+        signal_probs = [[.9, .02, .02, .06], [.02, .9, .06, .02], [.02, .06, .9, .02], [.06, .02, .02, .9]]
+        prob = RandomState.uniform()
+        if actions[0] == 0 and actions[1] == 0:
+            choice = RandomState.choice(4, p=signal_probs[0])
+            return pattern[choice]
+
+        elif actions[0] == 0 and actions[1] == 1:
+            choice = RandomState.choice(4, p=signal_probs[1])
+            return pattern[choice]
+
+        elif actions[0] == 1 and actions[1] == 0:
+            choice = RandomState.choice(4, p=signal_probs[2])
+            return pattern[choice]
+
+        elif actions[0] == 1 and actions[1] == 1:
+            choice = RandomState.choice(4, p=signal_probs[3])
+            return pattern[choice]
+
+        else:
+            raise ValueError
+
+    strategies = [AllC, AllD, TitForTat, GrimTrigger, Alternate, RandomStrategy]
+    game = RepeatedMatrixGame(payoff, strategies, signal_dist, ts_length, repeat)
+    game.play(mtype="private", RandomState=RandomState)
 
 

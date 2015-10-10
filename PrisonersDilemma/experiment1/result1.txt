@@ -1,0 +1,191 @@
+Start
+The object has 9 strategy functions below.
+****************************************
+ikegami
+allD
+Iida_tit
+oyama
+yamagishi_pd
+ogaway
+ohno
+tit_for_tat
+random_strategy
+****************************************
+Time series length: 10765
+--------------------------------------------------
+Game 1: "ikegami" vs "allD"
+stage score of ikegami :  10764
+stage score of allD :  10767
+--------------------------------------------------
+Game 2: "ikegami" vs "Iida_tit"
+stage score of ikegami :  21530
+stage score of Iida_tit :  21530
+--------------------------------------------------
+Game 3: "ikegami" vs "oyama"
+stage score of ikegami :  21530
+stage score of oyama :  21530
+--------------------------------------------------
+Game 4: "ikegami" vs "yamagishi_pd"
+stage score of ikegami :  19884
+stage score of yamagishi_pd :  19884
+--------------------------------------------------
+Game 5: "ikegami" vs "ogaway"
+stage score of ikegami :  10774
+stage score of ogaway :  10777
+--------------------------------------------------
+Game 6: "ikegami" vs "ohno"
+stage score of ikegami :  21530
+stage score of ohno :  21530
+--------------------------------------------------
+Game 7: "ikegami" vs "tit_for_tat"
+stage score of ikegami :  16612
+stage score of tit_for_tat :  16609
+--------------------------------------------------
+Game 8: "ikegami" vs "random_strategy"
+stage score of ikegami :  16118
+stage score of random_strategy :  16118
+--------------------------------------------------
+Game 9: "allD" vs "Iida_tit"
+stage score of allD :  10767
+stage score of Iida_tit :  10764
+--------------------------------------------------
+Game 10: "allD" vs "oyama"
+stage score of allD :  32295
+stage score of oyama :  0
+--------------------------------------------------
+Game 11: "allD" vs "yamagishi_pd"
+stage score of allD :  10769
+stage score of yamagishi_pd :  10763
+--------------------------------------------------
+Game 12: "allD" vs "ogaway"
+stage score of allD :  10785
+stage score of ogaway :  10755
+--------------------------------------------------
+Game 13: "allD" vs "ohno"
+stage score of allD :  10965
+stage score of ohno :  10665
+--------------------------------------------------
+Game 14: "allD" vs "tit_for_tat"
+stage score of allD :  10767
+stage score of tit_for_tat :  10764
+--------------------------------------------------
+Game 15: "allD" vs "random_strategy"
+stage score of allD :  21379
+stage score of random_strategy :  5458
+--------------------------------------------------
+Game 16: "Iida_tit" vs "oyama"
+stage score of Iida_tit :  21530
+stage score of oyama :  21530
+--------------------------------------------------
+Game 17: "Iida_tit" vs "yamagishi_pd"
+stage score of Iida_tit :  21530
+stage score of yamagishi_pd :  21530
+--------------------------------------------------
+Game 18: "Iida_tit" vs "ogaway"
+stage score of Iida_tit :  10774
+stage score of ogaway :  10777
+--------------------------------------------------
+Game 19: "Iida_tit" vs "ohno"
+stage score of Iida_tit :  21530
+stage score of ohno :  21530
+--------------------------------------------------
+Game 20: "Iida_tit" vs "tit_for_tat"
+stage score of Iida_tit :  21530
+stage score of tit_for_tat :  21530
+--------------------------------------------------
+Game 21: "Iida_tit" vs "random_strategy"
+stage score of Iida_tit :  16160
+stage score of random_strategy :  16163
+--------------------------------------------------
+Game 22: "oyama" vs "yamagishi_pd"
+stage score of oyama :  21530
+stage score of yamagishi_pd :  21530
+--------------------------------------------------
+Game 23: "oyama" vs "ogaway"
+stage score of oyama :  20
+stage score of ogaway :  32285
+--------------------------------------------------
+Game 24: "oyama" vs "ohno"
+stage score of oyama :  21530
+stage score of ohno :  21530
+--------------------------------------------------
+Game 25: "oyama" vs "tit_for_tat"
+stage score of oyama :  21530
+stage score of tit_for_tat :  21530
+--------------------------------------------------
+Game 26: "oyama" vs "random_strategy"
+stage score of oyama :  10864
+stage score of random_strategy :  26863
+--------------------------------------------------
+Game 27: "yamagishi_pd" vs "ogaway"
+stage score of yamagishi_pd :  10774
+stage score of ogaway :  10777
+--------------------------------------------------
+Game 28: "yamagishi_pd" vs "ohno"
+stage score of yamagishi_pd :  21530
+stage score of ohno :  21530
+--------------------------------------------------
+Game 29: "yamagishi_pd" vs "tit_for_tat"
+stage score of yamagishi_pd :  21530
+stage score of tit_for_tat :  21530
+--------------------------------------------------
+Game 30: "yamagishi_pd" vs "random_strategy"
+stage score of yamagishi_pd :  18909
+stage score of random_strategy :  10722
+--------------------------------------------------
+Game 31: "ogaway" vs "ohno"
+stage score of ogaway :  10955
+stage score of ohno :  10685
+--------------------------------------------------
+Game 32: "ogaway" vs "tit_for_tat"
+stage score of ogaway :  10777
+stage score of tit_for_tat :  10774
+--------------------------------------------------
+Game 33: "ogaway" vs "random_strategy"
+stage score of ogaway :  21447
+stage score of random_strategy :  5439
+--------------------------------------------------
+Game 34: "ohno" vs "tit_for_tat"
+stage score of ohno :  21530
+stage score of tit_for_tat :  21530
+--------------------------------------------------
+Game 35: "ohno" vs "random_strategy"
+stage score of ohno :  14273
+stage score of random_strategy :  19805
+--------------------------------------------------
+Game 36: "tit_for_tat" vs "random_strategy"
+stage score of tit_for_tat :  16217
+stage score of random_strategy :  16217
+--------------------------------------------------
+Score table:
+[[    0 10764 21530 21530 19884 10774 21530 16612 16118]
+ [10767     0 10767 32295 10769 10785 10965 10767 21379]
+ [21530 10764     0 21530 21530 10774 21530 21530 16160]
+ [21530     0 21530     0 21530    20 21530 21530 10864]
+ [19884 10763 21530 21530     0 10774 21530 21530 18909]
+ [10777 10755 10777 32285 10777     0 10955 10777 21447]
+ [21530 10665 21530 21530 21530 10685     0 21530 14273]
+ [16609 10764 21530 21530 21530 10774 21530     0 16217]
+ [16118  5458 16163 26863 10722  5439 19805 16217     0]]
+
+Ranking:
+1. "yamagishi_pd"
+total points: 146450, average points per game: 18306.25, average points per stage: 1.700534138411519
+2. "Iida_tit"
+total points: 145348, average points per game: 18168.5, average points per stage: 1.6877380399442639
+3. "ohno"
+total points: 143273, average points per game: 17909.125, average points per stage: 1.6636437529029262
+4. "tit_for_tat"
+total points: 140484, average points per game: 17560.5, average points per stage: 1.6312587087784487
+5. "ikegami"
+total points: 138742, average points per game: 17342.75, average points per stage: 1.6110311193683233
+6. "ogaway"
+total points: 118550, average points per game: 14818.75, average points per stage: 1.3765675801207617
+7. "oyama"
+total points: 118534, average points per game: 14816.75, average points per stage: 1.37638179284719
+8. "allD"
+total points: 118494, average points per game: 14811.75, average points per stage: 1.3759173246632606
+9. "random_strategy"
+total points: 116785, average points per game: 14598.125, average points per stage: 1.356072921504877
+
+***Repl Closed***
