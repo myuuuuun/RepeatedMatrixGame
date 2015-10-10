@@ -143,12 +143,16 @@
 ```python
 # テンプレート
 class MyStrategy():
-    def __init__(self, RandomState):
-        # RandomStateオブジェクトのインスタンスを受け取る
+    def __init__(self, random_state=None):
+        # random_stateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
-        self.RandomState = RandomState
+        if random_state is None:
+            random_state = np.random.random_state()
+        self.random_state = random_state
+        
         # 自分の行動の履歴
         self.my_history = []
+        
         # 過去の全てのシグナル
         self.signals = []
 
@@ -165,7 +169,7 @@ class MyStrategy():
         prior_signal = self.signals[-1]
 
         # 前期のシグナルがBadの時、20%の割合でこちらも攻撃する
-        epsilon = self.RandomState.uniform()
+        epsilon = self.random_state.uniform()
         if epsilon > 0.8 and prior_signal == 1:
             self.my_history.append(1)
             return 1
@@ -174,6 +178,7 @@ class MyStrategy():
             self.my_history.append(0)
             return 0
 
+
     # 各期のゲーム終了時に呼び出されるメソッド
     def get_signal(self, signal):
         # 前期のゲームのシグナルを受け取る
@@ -181,9 +186,9 @@ class MyStrategy():
         self.signals.append(signal)
 ```
 
-* \_\_init\_\_()では、RandomStateクラスのインスタンスを受け取ることができるようにしてください。何らかの確率分布を用いて戦略を決定する場合は、
-再現性を確保するため、このインスタンスのメソッドを使用してください。RandomStateクラスで使用できる確率変数は
-[NumPyのドキュメント](http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.RandomState.html)
+* \_\_init\_\_()では、random_stateクラスのインスタンスを受け取ることができるようにしてください。何らかの確率分布を用いて戦略を決定する場合は、
+再現性を確保するため、このインスタンスのメソッドを使用してください。random_stateクラスで使用できる確率変数は
+[NumPyのドキュメント](http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.random_state.html)
 を参照してください。
 
 

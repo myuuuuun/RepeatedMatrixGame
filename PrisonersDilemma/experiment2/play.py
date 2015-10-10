@@ -9,7 +9,6 @@ Released under the MIT license.
 from __future__ import division, print_function
 import math
 import functools #for python3
-from random import randint, random
 import numpy as np
 from numpy.random import geometric
 import sys
@@ -172,10 +171,10 @@ class RepeatedMatrixGame(object):
         self.signal = signal_dist
 
 
-    def __play__(self, strategy1, strategy2, mtype, RandomState, plot):
+    def __play__(self, strategy1, strategy2, mtype, random_state, plot):
         # インスタンス化
-        Strategy1 = strategy1(RandomState)
-        Strategy2 = strategy2(RandomState)
+        Strategy1 = strategy1(random_state)
+        Strategy2 = strategy2(random_state)
         score1 = 0
         score2 = 0
 
@@ -219,9 +218,9 @@ class RepeatedMatrixGame(object):
         return score1, score2
 
 
-    def play(self, mtype="perfect", RandomState=None, plot=False):
-        if RandomState is None:
-            RandomState = np.random.RandomState()
+    def play(self, mtype="perfect", random_state=None, plot=False):
+        if random_state is None:
+            random_state = np.random.RandomState()
 
         strlen = len(self.strategies)
         if strlen < 2:
@@ -239,7 +238,7 @@ class RepeatedMatrixGame(object):
             for j, str2 in enumerate(self.strategies[i+1:]):
                 score1, score2 = 0, 0
                 for r in range(self.repeat):
-                    s1, s2= self.__play__(str1, str2, mtype, RandomState, plot)
+                    s1, s2= self.__play__(str1, str2, mtype, random_state, plot)
                     score1 += s1
                     score2 += s2
 
@@ -274,14 +273,14 @@ class RepeatedMatrixGame(object):
 if __name__ == '__main__':
     payoff = np.array([[4, 0], [5, 2]])
     seed = 11451
-    RandomState = np.random.RandomState(seed)
+    rs = np.random.RandomState(seed)
     discount_v = 0.97
-    ts_length = RandomState.geometric(p=1-discount_v)
+    ts_length = rs.geometric(p=1-discount_v)
     repeat = 10
 
 
     def public_signal_dist(actions):
-        prob = RandomState.uniform()
+        prob = rs.uniform()
         if actions[0] == 0 and actions[1] == 0:
             return 0 if prob < 0.9 else 1
 
@@ -298,21 +297,21 @@ if __name__ == '__main__':
     def private_signal_dist(actions):
         pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
         signal_probs = [[.9, .02, .02, .06], [.02, .06, .9, .02], [.02, .9, .06, .02], [.06, .02, .02, .9]]
-        prob = RandomState.uniform()
+        prob = rs.uniform()
         if actions[0] == 0 and actions[1] == 0:
-            choice = RandomState.choice(4, p=signal_probs[0])
+            choice = rs.choice(4, p=signal_probs[0])
             return pattern[choice]
 
         elif actions[0] == 0 and actions[1] == 1:
-            choice = RandomState.choice(4, p=signal_probs[1])
+            choice = rs.choice(4, p=signal_probs[1])
             return pattern[choice]
 
         elif actions[0] == 1 and actions[1] == 0:
-            choice = RandomState.choice(4, p=signal_probs[2])
+            choice = rs.choice(4, p=signal_probs[2])
             return pattern[choice]
 
         elif actions[0] == 1 and actions[1] == 1:
-            choice = RandomState.choice(4, p=signal_probs[3])
+            choice = rs.choice(4, p=signal_probs[3])
             return pattern[choice]
 
         else:
@@ -320,6 +319,6 @@ if __name__ == '__main__':
 
     strategies = [AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy]
     game = RepeatedMatrixGame(payoff, strategies, public_signal_dist, ts_length, repeat)
-    game.play(mtype="public", RandomState=RandomState)
+    game.play(mtype="public", random_state=rs)
 
 

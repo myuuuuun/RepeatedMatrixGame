@@ -2,21 +2,21 @@
 '''
 サンプル戦略集
 '''
-
-from __future__ import division, print_function
-import math
-import functools #for python3
-from random import randint
+import numpy as np
 
 
 # テンプレート
 class MyStrategy():
-    def __init__(self, RandomState):
-        # RandomStateオブジェクトのインスタンスを受け取る
+    def __init__(self, random_state=None):
+        # random_stateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
-        self.RandomState = RandomState
+        if random_state is None:
+            random_state = np.random.random_state()
+        self.random_state = random_state
+        
         # 自分の行動の履歴
         self.my_history = []
+        
         # 過去の全てのシグナル
         self.signals = []
 
@@ -33,7 +33,7 @@ class MyStrategy():
         prior_signal = self.signals[-1]
 
         # 前期のシグナルがBadの時、20%の割合でこちらも攻撃する
-        epsilon = self.RandomState.uniform()
+        epsilon = self.random_state.uniform()
         if epsilon > 0.8 and prior_signal == 1:
             self.my_history.append(1)
             return 1
@@ -52,7 +52,7 @@ class MyStrategy():
 
 # 常に協調
 class AllC():
-    def __init__(self, RandomState):
+    def __init__(self, random_state=None):
         pass
 
     def play(self):
@@ -64,7 +64,7 @@ class AllC():
 
 # 常に攻撃
 class AllD():
-    def __init__(self, RandomState):
+    def __init__(self, random_state=None):
         pass
 
     def play(self):
@@ -78,7 +78,7 @@ class AllD():
 # 最初は協調を続け、相手が1度でも攻撃してきたら以後ずっと攻撃
 # imperfect monitoringの場合は、シグナルが1になれば、以降ずっと攻撃
 class GrimTrigger():
-    def __init__(self, RandomState):
+    def __init__(self, random_state=None):
         # 相手が協力的かどうかのflag
         # 相手が1度でも攻撃してきたらFalseにする
         self.cooperation_flag = True
@@ -97,7 +97,7 @@ class GrimTrigger():
 
 # 協調と攻撃を交互に繰り返す
 class Alternate():
-    def __init__(self, RandomState):
+    def __init__(self, random_state=None):
         # 次にどの手をだすかのflag
         # Trueなら次は0, Falseなら次は1を出す
         self.flag = True
@@ -115,11 +115,13 @@ class Alternate():
 
 # ランダム
 class RandomStrategy():
-    def __init__(self, RandomState):
-        self.RandomState = RandomState
+    def __init__(self, random_state=None):
+        if random_state is None:
+            random_state = np.random.random_state()
+        self.random_state = random_state
 
     def play(self):
-        return self.RandomState.randint(0, 1)
+        return self.random_state.randint(0, 1)
 
     def get_signal(self, signal):
         pass
