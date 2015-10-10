@@ -128,9 +128,9 @@
 * get_signal(self, signal): 各期のstage game終了後、その期のシグナルを受け取るメソッド
 
 ### シグナルについて
-perfect monitoringの場合、シグナルは相手の行動そのもの（相手の行動が0なら0, 1なら1）になります。  
-imperfect public monitoringの場合、シグナルとして、プロジェクトが成功した場合0, 失敗した場合1が与えられます。シグナルは上述の確率分布に従って決定されます。  
-imperfect private monitoringの場合、シグナルとして、相手の行動が0だったか1だったかが与えられます。ただし、その行動にはノイズが含まれており、
+* perfect monitoringの場合、シグナルは相手の行動そのもの（相手の行動が0なら0, 1なら1）になります。  
+* imperfect public monitoringの場合、シグナルとして、プロジェクトが成功した場合0, 失敗した場合1が与えられます。シグナルは上述の確率分布に従って決定されます。  
+* imperfect private monitoringの場合、シグナルとして、相手の行動が0だったか1だったかが与えられます。ただし、その行動にはノイズが含まれており、
 双方のシグナルは上述の同時確率分布に従って決定されます。
 
 
@@ -173,6 +173,12 @@ class MyStrategy():
         else:
             self.my_history.append(0)
             return 0
+
+    # 各期のゲーム終了時に呼び出されるメソッド
+    def get_signal(self, signal):
+        # 前期のゲームのシグナルを受け取る
+        # 受け取ったシグナルをシグナルの履歴に追加
+        self.signals.append(signal)
 ```
 
 * \_\_init\_\_()では、RandomStateクラスのインスタンスを受け取ることができるようにしてください。何らかの確率分布を用いて戦略を決定する場合は、
