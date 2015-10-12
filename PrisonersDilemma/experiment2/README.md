@@ -31,7 +31,7 @@
 * 現在n期とすると、**n+1期が来る確率は97%**（n=0, 1, 2,...）  
 （これは、無限回繰り返しゲームにおいて現在割引価値を0.97と取ることを意味します）
 
-平均は97期になります（第1期は確率1で来るものとします）。
+平均は33.33期になります（第1期は確率1で来るものとします）。
 
 全ての対戦の後、**利得の総和が最も多かったプログラムが勝ち**です。
 
@@ -142,12 +142,12 @@
 
 ```python
 # テンプレート
-class MyStrategy():
+class MyStrategy(object):
     def __init__(self, random_state=None):
         # RandomStateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
         if random_state is None:
-            random_state = np.random.random_state()
+            random_state = np.random.RandomState()
         self.random_state = random_state
         
         # 自分の行動の履歴
@@ -170,7 +170,7 @@ class MyStrategy():
 
         # 前期のシグナルがBadの時、20%の割合でこちらも攻撃する
         epsilon = self.random_state.uniform()
-        if epsilon > 0.8 and prior_signal == 1:
+        if epsilon < 0.2 and prior_signal == 1:
             self.my_history.append(1)
             return 1
         

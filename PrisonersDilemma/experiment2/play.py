@@ -224,8 +224,7 @@ class RepeatedMatrixGame(object):
 
         strlen = len(self.strategies)
         if strlen < 2:
-            print("To play, need at least 2 strategies.")
-            return
+            raise UnsupportedArgumentError("To play, need at least 2 strategies.")
 
         result = np.zeros((strlen, strlen), dtype=float)
         count = 1
@@ -237,6 +236,10 @@ class RepeatedMatrixGame(object):
         for i, str1 in enumerate(self.strategies):
             for j, str2 in enumerate(self.strategies[i+1:]):
                 score1, score2 = 0, 0
+                if plot:
+                    acti
+
+
                 for r in range(self.repeat):
                     s1, s2= self.__play__(str1, str2, mtype, random_state, plot)
                     score1 += s1
@@ -270,6 +273,20 @@ class RepeatedMatrixGame(object):
                 .format( total[s], total[s]/(strlen-1), total[s]/((strlen-1)*self.ts_length) ))
 
 
+    def plot(self, history1=None, history2=None, signals=None):
+        ts_length = len(history1)
+
+        ax1 = plt.subplot(2, 1, 1)
+        plt.plot(history1, range(ts_length), 'o', color='c')
+
+        plt.subplot(2, 1, 2, sharex=ax1, sharey=ax1)
+        plt.plot(history2, range(ts_length), 'o', color='c')
+
+        plt.xlim(-1, 2)
+        plt.ylim(-1, 101)
+        plt.show()
+ 
+
 if __name__ == '__main__':
     payoff = np.array([[4, 0], [5, 2]])
     seed = 11451
@@ -279,6 +296,7 @@ if __name__ == '__main__':
     repeat = 10
 
 
+    # プロジェクトが成功か失敗かを返す
     def public_signal_dist(actions):
         prob = rs.uniform()
         if actions[0] == 0 and actions[1] == 0:
@@ -294,8 +312,10 @@ if __name__ == '__main__':
             raise ValueError
 
 
+    # 「相手の」シグナルが協調か攻撃かを（ノイズ付きで）返す
     def private_signal_dist(actions):
         pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
+        # 例えば実際の行動が(0, 1)なら、シグナルは(1, 0)である可能性が最も高い
         signal_probs = [[.9, .02, .02, .06], [.02, .06, .9, .02], [.02, .9, .06, .02], [.06, .02, .02, .9]]
         prob = rs.uniform()
         if actions[0] == 0 and actions[1] == 0:
@@ -317,8 +337,9 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-    strategies = [AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy]
+    strategies = [MyStrategy, GrimTrigger]
     game = RepeatedMatrixGame(payoff, strategies, public_signal_dist, ts_length, repeat)
     game.play(mtype="public", random_state=rs)
+    game.plot()
 
 

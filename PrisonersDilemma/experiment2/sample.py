@@ -11,7 +11,7 @@ class MyStrategy():
         # RandomStateオブジェクトのインスタンスを受け取る
         # 確率変数を使いたい場合は、このインスタンスを使う
         if random_state is None:
-            random_state = np.random.random_state()
+            random_state = np.random.RandomState()
         self.random_state = random_state
         
         # 自分の行動の履歴
@@ -117,7 +117,7 @@ class Alternate():
 class RandomStrategy():
     def __init__(self, random_state=None):
         if random_state is None:
-            random_state = np.random.random_state()
+            random_state = np.random.RandomState()
         self.random_state = random_state
 
     def play(self):
