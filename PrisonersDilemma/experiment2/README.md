@@ -195,8 +195,8 @@ class MyStrategy(object):
 他にもいくつか関数例を用意していますので、参考にしてください。->[関数例](./sample.py)
 
 ## テスト
-テストを用意しました。->[テスト](./test.py)
-iPython notebook上でテストを行いたい場合はこちらを使ってください->[テスト](./test.ipynb)
+テストを用意しました。->[テスト](./test.py)  
+iPython notebook上でテストを行いたい場合はこちら->[テスト](./test.ipynb)
 
 
 
