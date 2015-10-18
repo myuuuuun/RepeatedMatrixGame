@@ -6,18 +6,15 @@ Copyright (c) 2015 @myuuuuun
 Released under the MIT license.
 '''
 
+# for python2
 from __future__ import division, print_function
-import math
-import functools #for python3
 import numpy as np
 import pandas as pd
-from numpy.random import geometric
+from datetime import datetime
 from sample import AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import time
-from datetime import datetime
-import numba
 np.set_printoptions(precision=3)
 pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 200)
@@ -53,22 +50,23 @@ def is_valid_payoff(payoff):
         if not np.issubdtype(payoff.dtype, (int, float)):
             raise TypeError(msg2)
 
-    return payoff, row
+    return payoff
 
 
 # type checking of strategies
 def is_valid_strategies(strategies):
-    msg = ("Argument \"strategies\" must be function or "
-           "list(ndim=1) of functions.")
+    msg = ("Argument \"strategies\" must be class or "
+           "list(ndim=1) of classes that has 2 methods"
+           "play() and get_signal()")
 
-    if hasattr(strategies, '__call__'):
+    if hasattr(strategies, 'play') and hasattr(strategies, 'get_signal'):
         strategies = [strategies]
 
     elif isinstance(strategies, list) and len(strategies) >= 1:
         for s in strategies:
-            if not hasattr(s, '__call__'):
+            if not hasattr(strategies, 'play') and hasattr(strategies, 'get_signal'):
                 raise TypeError(msg)
-
+    
     else:
         raise TypeError(msg)
 
@@ -105,7 +103,6 @@ def is_valid_ts_length(ts_length, random_state=None):
     return ts_length
 
 
-
 class RepeatedMatrixGame(object):
     '''
     Class for simulating finite repeated symmetric matrix game.
@@ -140,24 +137,22 @@ class RepeatedMatrixGame(object):
         Number of repetition of games.
         If None or -1, pick random number from 1000 to 10000.
     '''
-    def __init__(self, payoff, strategies, signal_dist, ts_length=None, repeat=1, **kwargs):
-        # kwargs: discount factor, is_play_with_myself...
-
+    def __init__(self, payoff, strategies, **kwargs):
         # type and size checking of payoff
-        self.payoff, self.actlen = is_valid_payoff(payoff)
+        self.payoff = is_valid_payoff(payoff)
 
         # type checking of strategies
         self.strategies =  is_valid_strategies(strategies)
 
         # type checking of ts_length
+        ts_length = kwargs.get('ts_length', None)
         self.ts_length = is_valid_ts_length(ts_length)
 
-        self.repeat = repeat
-
-        self.signal = signal_dist
+        self.repeat = kwargs.get('repeat', 1)
+        self.signal = kwargs.get('signal', None)
             
     def set_payoff(self, payoff):
-        self.payoff, self.actlen = is_valid_payoff(payoff)
+        self.payoff = is_valid_payoff(payoff)
 
     def set_strategies(self, strategies):
         self.strategies = is_valid_strategies(strategies)
@@ -168,24 +163,24 @@ class RepeatedMatrixGame(object):
     def show_strategies(self):
         print("The object has {0} strategy functions below".format(len(self.strategies)))
         print("*"*40)
-        for f in self.strategies:
-            print(f.__name__)
-
+        for s in self.strategies:
+            print(self.str_name(s))
         print("*"*40)
 
     def remove_strategies(self, str_name):
-        for f in self.strategies:
-            if f.__name__ == str_name:
-                self.strategies.remove(f)
+        for s in self.strategies:
+            if self.str_name(s) == str_name:
+                self.strategies.remove(s)
 
     def set_ts_length(self, ts_length):
         self.ts_length = is_valid_ts_length(ts_length)
 
-    def set_signal(self, signal_dist):
-        self.signal = signal_dist
+    def set_signal(self, signal):
+        self.signal = signal
 
+    def str_name(self, strategy):
+        return strategy.__module__ + "." + strategy.__name__
 
-    @numba.jit
     def __play__(self, strategy1, strategy2, mtype, round_ts_length, random_state, record):
         # インスタンス化
         Strategy1 = strategy1(random_state)
@@ -239,57 +234,65 @@ class RepeatedMatrixGame(object):
             self.stage_count += 1
 
         return score1, score2
-
     
-    def play(self, mtype="perfect", random_seed=None, record=False, plot=False):
+    def play(self, **kwargs):
+        mtype = kwargs.get('mtype', "perfect")
+        random_seed = kwargs.get('random_seed', None)
+        record = kwargs.get('record', False)
+
         if random_seed is None:
             random_state = np.random.RandomState()
             random_seed = np.nan
-
         else:
             random_state = np.random.RandomState(random_seed)
-
+        
         # Monitoring type
         if not mtype in ["perfect", "public", "private"]:
             msg = "mtype must be \'perfect\', \'public\' or \'private\'"
             raise ValueError(msg)
-
+        
         # Number of strategy classes
         strlen = len(self.strategies)
         if strlen < 2:
             msg = "To play, need at least 2 strategies."
             raise TypeError(msg)
-
+        
         # Number of matches
         matches = strlen * (strlen-1) // 2
-
+        
         # Score table
         result = np.zeros((strlen, strlen))
-
+        
         # List of time series for all rounds
         ts_list = np.empty(self.repeat, dtype=np.int64)
         for r in range(self.repeat):
             ts_list[r] = self.ts_length[r % len(self.ts_length)]
-
+        
         # Total time series of all rounds (of 1 match)
         total_ts = np.sum(ts_list)
 
         if record:
+            # record table for each match
             self.match_result = np.empty((total_ts, 7), dtype=int)
             # Number of rows in record DataFrame (=total stages)
             row = total_ts * matches
-            str_names = [s.__name__ for s in self.strategies]
+            # Name list of strategic classes
+            str_names = [self.str_name(s) for s in self.strategies]
+            # str_names without overlap(for pd.Categorical setting)
+            str_names_cats = list(set(str_names))
+            # rounds(repeats) list of each game in a match
             round_list = np.empty(total_ts, dtype=int)
             count_row = 0
             for r, ts in enumerate(ts_list):
                 round_list[count_row:count_row+ts] = r
                 count_row += ts
-
+            # setting of pandas dataframe
             self.record_df = pd.DataFrame({
                 'Mtype'  : pd.Categorical([mtype] * row, categories=["perfect", "public", "private"]),
                 'RandomSeed': np.array([random_seed] * row),
-                'Strategy1': pd.Categorical(np.empty(row), categories=str_names),
-                'Strategy2': pd.Categorical(np.empty(row), categories=str_names),
+                'Strategy1': pd.Categorical(np.empty(row), categories=str_names_cats),
+                'Strategy2': pd.Categorical(np.empty(row), categories=str_names_cats),
+                'Match'  : np.empty(row, dtype=int),
                 'Round'  : np.empty(row, dtype=int),
                 'Period' : np.empty(row, dtype=int),
                 'Action1': np.empty(row),
@@ -298,62 +301,58 @@ class RepeatedMatrixGame(object):
                 'Signal2': np.empty(row),
                 'Payoff1': np.empty(row),
                 'Payoff2': np.empty(row),
-                }, columns=['Mtype', 'RandomSeed', 'Strategy1', 'Strategy2', 'Round',
+                }, columns=['Mtype', 'RandomSeed', 'Strategy1', 'Strategy2', 'Match', 'Round',
                 'Period', 'Action1', 'Action2', 'Signal1', 'Signal2', 'Payoff1', 'Payoff2'])
 
+            # write matches, rounds in record table
             for i in range(matches):
+                self.record_df.loc[i*total_ts : (i+1)*total_ts-1, "Match"] = i
                 self.record_df.loc[i*total_ts : (i+1)*total_ts-1, "Round"] = round_list
 
-        # 現在何組目の対戦か
+        # current match count
         match_count = 1
 
-        start = time.time()
         print("Start")
         self.show_strategies()
-        print("Time series length: {0}".format(self.ts_length))
+        #print("Time series length: {0}".format(self.ts_length))
         print("Repeats: {0}".format(self.repeat))
         print("Total time series length: {0}".format(total_ts))
         
+        # play match
         for i, str1 in enumerate(self.strategies):
             for j, str2 in enumerate(self.strategies[i+1:]):
                 if record:
                     count_ts = 0
-                    self.record_df['Strategy1'][(match_count-1) * total_ts : match_count * total_ts] = str1.__name__
-                    self.record_df['Strategy2'][(match_count-1) * total_ts : match_count * total_ts] = str2.__name__
+                    self.record_df['Strategy1'][(match_count-1) * total_ts : match_count * total_ts] \
+                     = self.str_name(str1)
+                    self.record_df['Strategy2'][(match_count-1) * total_ts : match_count * total_ts] \
+                     = self.str_name(str2)
 
                 score1, score2 = 0, 0
                 self.stage_count = 0
 
+                # play game
                 for r in range(self.repeat):
                     round_ts_length = ts_list[r]
-
                     s1, s2 = self.__play__(str1, str2, mtype, round_ts_length, random_state, record)
                     score1 += s1
                     score2 += s2
-                    count_ts += round_ts_length
 
                 if record:
-                    self.record_df.loc[(match_count-1)*total_ts : match_count*total_ts-1, 'Period':'Payoff2'] = self.match_result[0:total_ts, 0:7]
+                    count_ts += round_ts_length
+                    self.record_df.loc[(match_count-1)*total_ts : match_count*total_ts-1, 'Period':'Payoff2'] \
+                     = self.match_result[0:total_ts, 0:7]
                 
-                print("-"*60)
-                print("Game {0}: \"{1}\" vs \"{2}\"".format(match_count, str1.__name__, str2.__name__))
-                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(str1.__name__, score1, score1/total_ts))
-                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(str2.__name__, score2, score2/total_ts))
+                print("\nGame {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
+                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str1), score1, score1/total_ts))
+                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str2), score2, score2/total_ts))
                 result[i][i+j+1] = score1
                 result[i+j+1][i] = score2
                 match_count += 1
         
-
-        print("-"*60)
-        elapsed_time = time.time() - start
-        print ("elapsed_time:{0}".format(elapsed_time))
-
-
-        print("Score table:")
+        print("\nScore table:")
         print(result)
-
         print("\nRanking:")
-
         total = np.zeros(strlen, dtype=float)
         for i in range(strlen):
             total[i] = np.sum(result[i])
@@ -361,41 +360,26 @@ class RepeatedMatrixGame(object):
         ranking = np.argsort(total)[::-1]
         for i in range(strlen):
             s = ranking[i]
-            print("{0}. \"{1}\"".format(i+1, self.strategies[s].__name__))
-            print("total points: {0:.3f}, average points per opponent: {1:.3f}, average points per stage: {2:.3f}"
+            print("{0}. \"{1}\"".format(i+1, self.str_name(self.strategies[s])))
+            print("total points: {0:.3f}, average points per match: {1:.3f}, average points per stage: {2:.3f}"
                 .format( total[s], total[s]/(strlen-1), total[s]/((strlen-1)*total_ts) ))
 
-        current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        self.record_df.to_csv("record_" + str(current_time) + ".csv")
-        print(self.record_df)
-
-
-    def plot(self, history1=None, history2=None, signals=None):
-        ts_length = len(history1)
-
-        ax1 = plt.subplot(2, 1, 1)
-        plt.plot(history1, range(ts_length), 'o', color='c')
-
-        plt.subplot(2, 1, 2, sharex=ax1, sharey=ax1)
-        plt.plot(history2, range(ts_length), 'o', color='c')
-
-        plt.xlim(-1, 2)
-        plt.ylim(-1, 101)
-        plt.show()
+        if record:
+            current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            self.record_df.to_csv("record_" + str(current_time) + ".csv")
  
 
 if __name__ == '__main__':
     payoff = np.array([[4, 0], [5, 2]])
     seed = 11451
     rs = np.random.RandomState(seed)
-    discount_v = 0.97
-    repeat = 1000
+    
     # 第1期は確率1で来るものとする
+    discount_v = 0.97
     ts_length = rs.geometric(p=1-discount_v, size=1000) + 1
 
-
     # プロジェクトが成功か失敗かを返す
-    def public_signal_dist(actions):
+    def public_signal(actions):
         prob = rs.uniform()
         if actions[0] == 0 and actions[1] == 0:
             return 0 if prob < 0.9 else 1
@@ -409,9 +393,8 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-
     # 「相手の」シグナルが協調か攻撃かを（ノイズ付きで）返す
-    def private_signal_dist(actions):
+    def private_signal(actions):
         pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
         # 例えば実際の行動が(0, 1)なら、シグナルは(1, 0)である可能性が最も高い
         signal_probs = [[.9, .02, .02, .06], [.02, .06, .9, .02], [.02, .9, .06, .02], [.06, .02, .02, .9]]
@@ -435,9 +418,9 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-    strategies = [AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy]
-    game = RepeatedMatrixGame(payoff, strategies, private_signal_dist, ts_length, repeat)
-    game.play("private", seed, True)
-    #game.plot()
+    strategies = [AllC, AllD, MyStrategy, GrimTrigger]
+    game = RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)
+    game.play(mtype="private", random_seed=seed, record=True)
+
 
 

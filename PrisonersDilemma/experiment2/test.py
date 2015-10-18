@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function
+import sys
+sys.path.append('./user_strategies')
 import unittest
 import numpy as np
-from sample import MyStrategy, AllC, AllD, GrimTrigger, Alternate, RandomStrategy
+from Iida_perfect_monitoring import Iida_pm
+from Iida_imperfect_public import Iida_ipm
+from Iida_imperfect_private import Iida_iprm
+from kato import KatoStrategy
 
 
 class TestStrategies(unittest.TestCase):
     def setUp(self):
-        self.Strategies = [MyStrategy, AllC, AllD, GrimTrigger, Alternate, RandomStrategy] # ここに自作のclassを入れる
+        self.Strategies = [Iida_pm, Iida_ipm, Iida_iprm, KatoStrategy] # ここに自作のclassを入れる
         self.case1 = "Signal is empty(period 1)"
         self.case2 = [0, 1]
         self.case3 = [1, 0]
