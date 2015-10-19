@@ -51,7 +51,7 @@ class MyStrategy():
 
 
 # 常に協調
-class AllC(object):
+class AllC():
     def __init__(self, random_state=None):
         pass
 

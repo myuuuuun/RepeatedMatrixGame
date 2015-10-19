@@ -8,11 +8,12 @@ from Iida_perfect_monitoring import Iida_pm
 from Iida_imperfect_public import Iida_ipm
 from Iida_imperfect_private import Iida_iprm
 from kato import KatoStrategy
+from mhanami_Public_Strategy import PubStrategy
 
 
 class TestStrategies(unittest.TestCase):
     def setUp(self):
-        self.Strategies = [Iida_pm, Iida_ipm, Iida_iprm, KatoStrategy] # ここに自作のclassを入れる
+        self.Strategies = [PubStrategy] # ここに自作のclassを入れる
         self.case1 = "Signal is empty(period 1)"
         self.case2 = [0, 1]
         self.case3 = [1, 0]
@@ -27,7 +28,8 @@ class TestStrategies(unittest.TestCase):
         print("testcase:", self.case1)
         for Strategy in self.Strategies:
             rst = Strategy(self.RandomState).play()
-            self.assertIn(rst, (0, 1))
+            self.assertIsNotNone(rst, Strategy.__module__)
+            self.assertIn(rst, (0, 1), Strategy.__module__)
 
 
     # case2を引数に渡してテスト
@@ -35,9 +37,12 @@ class TestStrategies(unittest.TestCase):
         print("testcase:", self.case2)
         for Strategy in self.Strategies:
             S = Strategy(self.RandomState)
-            S.get_signal(self.case2)
-            rst = S.play()
-            self.assertIn(rst, (0, 1))
+            for signal in self.case2:
+                S.get_signal(signal)
+                rst = S.play()
+            
+            self.assertIsNotNone(rst, Strategy.__module__)
+            self.assertIn(rst, (0, 1), Strategy.__module__)
 
 
     # case3を引数に渡してテスト
@@ -49,7 +54,8 @@ class TestStrategies(unittest.TestCase):
                 S.get_signal(signal)
             
             rst = S.play()
-            self.assertIn(rst, (0, 1))
+            self.assertIsNotNone(rst, S.__module__)
+            self.assertIn(rst, (0, 1), S.__module__)
 
 
     # case4を引数に渡してテスト
@@ -60,8 +66,9 @@ class TestStrategies(unittest.TestCase):
             for signal in self.case4:
                 S.get_signal(signal)
                 rst = S.play()
+                self.assertIsNotNone(rst, S.__module__)
+                self.assertIn(rst, (0, 1), S.__module__)
             
-            self.assertIn(rst, (0, 1))
 
 
 if __name__ == '__main__':
