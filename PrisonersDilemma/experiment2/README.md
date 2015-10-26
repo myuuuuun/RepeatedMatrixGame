@@ -3,6 +3,10 @@
 実験1と同様に、プログラム同士で繰り返し囚人のジレンマゲームをプレイし、どんな戦略が最も大きな利得を得られるかを実験します。 
 今回はperfect monitoring, imperfect public monitoring, imperfect private monitoringの3パターンの実験を行います。
 
+## 実験結果（10月26日追加）
+[iPython notebook](./Experiment 2015-10-19.ipynb)
+[実験結果(csv)](https://drive.google.com/open?id=0B2s1Ez2EuFfUcFNtUHpzTVBiN00)
+
 ## ルール
 
 ### 共通ルール
