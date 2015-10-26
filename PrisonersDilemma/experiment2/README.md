@@ -4,8 +4,7 @@
 今回はperfect monitoring, imperfect public monitoring, imperfect private monitoringの3パターンの実験を行います。
 
 ## 実験結果（10月26日追加）
-[iPython notebook](./Experiment 2015-10-19.ipynb)
-[実験結果(csv)](https://drive.google.com/open?id=0B2s1Ez2EuFfUcFNtUHpzTVBiN00)
+[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment2/Experiment%202015-10-19.ipynb), [実験結果(csv)](https://drive.google.com/open?id=0B2s1Ez2EuFfUcFNtUHpzTVBiN00)
 
 ## ルール
 
