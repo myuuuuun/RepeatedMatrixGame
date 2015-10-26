@@ -193,11 +193,6 @@ class RepeatedMatrixGame(object):
             action1 = Strategy1.play()
             action2 = Strategy2.play()
 
-            if action1 is None:
-                raise ValueError("{0}.play() do not return value in some case".format(self.str_name(Strategy1)))
-            if action2 is None:
-                raise ValueError("{0}.play() do not return value in some case".format(self.str_name(Strategy2)))
-
             # 利得を追加
             stage_score1 = self.payoff[action1][action2]
             stage_score2 = self.payoff[action2][action1]
@@ -333,8 +328,7 @@ class RepeatedMatrixGame(object):
                     self.record_df['Strategy2'][(match_count-1) * total_ts : match_count * total_ts] \
                      = self.str_name(str2)
 
-                score1 = 0
-                score2 = 0
+                score1, score2 = 0, 0
                 self.stage_count = 0
 
                 # play game
@@ -343,10 +337,6 @@ class RepeatedMatrixGame(object):
                     s1, s2 = self.__play__(str1, str2, mtype, round_ts_length, random_state, record)
                     score1 += s1
                     score2 += s2
-                    """
-                    if not isinstance(s1, np.int64):
-                        raise ValueError(s1, str1.__name__, str2.__name__, mtype, round_ts_length)
-                    """
 
                 if record:
                     count_ts += round_ts_length
@@ -354,8 +344,6 @@ class RepeatedMatrixGame(object):
                      = self.match_result[0:total_ts, 0:7]
                 
                 print("\nGame {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
-                print(type(score1))
-                print(score1)
                 print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str1), score1, score1/total_ts))
                 print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str2), score2, score2/total_ts))
                 result[i][i+j+1] = score1
