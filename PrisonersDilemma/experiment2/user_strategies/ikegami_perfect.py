@@ -29,7 +29,7 @@ class Self_Centered_perfect:
         if self.signal[-1] == 1:
             self.count += 1
         
-        self.count_rate = slef.count / len(self.signal)
+        self.count_rate = self.count / len(self.signal)
         
     
     def get_signal(self, signal):

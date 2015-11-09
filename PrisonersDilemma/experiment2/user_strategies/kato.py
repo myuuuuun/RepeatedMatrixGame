@@ -67,7 +67,7 @@ class KatoStrategy(object):
                 return self.attack_action()
             elif research1_result == 1:
                 return self.attack_action()
-            elif lem(self.myself) >= 20 and research3_result == 1:
+            elif len(self.myself) >= 20 and research3_result == 1:
                 return self.attack_action()
             else:
                 return self.normal_action()
