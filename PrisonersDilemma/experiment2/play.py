@@ -8,16 +8,19 @@ Released under the MIT license.
 
 # for python2
 from __future__ import division, print_function
+import sys
+sys.path.append('./user_strategies')
 import numpy as np
 import pandas as pd
 from datetime import datetime
-from sample import AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import time
+from sample import AllC, AllD, MyStrategy, GrimTrigger, Alternate, RandomStrategy
 np.set_printoptions(precision=3)
 pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 200)
+
 
 
 # type and size checking of payoff
@@ -162,10 +165,10 @@ class RepeatedMatrixGame(object):
 
     def show_strategies(self):
         print("The object has {0} strategy functions below".format(len(self.strategies)))
-        print("*"*40)
-        for s in self.strategies:
-            print(self.str_name(s))
-        print("*"*40)
+        print("-"*50)
+        for i, s in enumerate(self.strategies):
+            print(i+1, self.str_name(s))
+        print("-"*50)
 
     def remove_strategies(self, str_name):
         for s in self.strategies:
@@ -258,10 +261,11 @@ class RepeatedMatrixGame(object):
             raise TypeError(msg)
         
         # Number of matches
-        matches = strlen * (strlen-1) // 2
+        matches = strlen * (strlen-1)
         
         # Score table
-        result = np.zeros((strlen, strlen))
+        result_total_ave = np.zeros((strlen, strlen))
+        result_session_ave = np.zeros((strlen, strlen))
         
         # List of time series for all rounds
         ts_list = np.empty(self.repeat, dtype=np.int64)
@@ -290,8 +294,8 @@ class RepeatedMatrixGame(object):
             self.record_df = pd.DataFrame({
                 'Mtype'  : pd.Categorical([mtype] * row, categories=["perfect", "public", "private"]),
                 'RandomSeed': np.array([random_seed] * row),
-                'Strategy1': pd.Categorical(np.empty(row), categories=str_names_cats),
-                'Strategy2': pd.Categorical(np.empty(row), categories=str_names_cats),
+                'Strategy1': np.empty(row, dtype=int),
+                'Strategy2': np.empty(row, dtype=int),
                 'Match'  : np.empty(row, dtype=int),
                 'Round'  : np.empty(row, dtype=int),
                 'Period' : np.empty(row, dtype=int),
@@ -320,49 +324,63 @@ class RepeatedMatrixGame(object):
         
         # play match
         for i, str1 in enumerate(self.strategies):
-            for j, str2 in enumerate(self.strategies[i+1:]):
-                if record:
-                    count_ts = 0
-                    self.record_df['Strategy1'][(match_count-1) * total_ts : match_count * total_ts] \
-                     = self.str_name(str1)
-                    self.record_df['Strategy2'][(match_count-1) * total_ts : match_count * total_ts] \
-                     = self.str_name(str2)
+            for j, str2 in enumerate(self.strategies):
+                if i == j:
+                    pass
 
-                score1, score2 = 0, 0
-                self.stage_count = 0
+                else:
+                    if record:
+                        count_ts = 0
+                        self.record_df['Strategy1'][(match_count-1) * total_ts : match_count * total_ts] = i+1
+                        self.record_df['Strategy2'][(match_count-1) * total_ts : match_count * total_ts] = j+1
 
-                # play game
-                for r in range(self.repeat):
-                    round_ts_length = ts_list[r]
-                    s1, s2 = self.__play__(str1, str2, mtype, round_ts_length, random_state, record)
-                    score1 += s1
-                    score2 += s2
+                    score1, score2 = 0, 0
+                    average_score1, average_score2 = 0, 0
+                    self.stage_count = 0
 
-                if record:
-                    count_ts += round_ts_length
-                    self.record_df.loc[(match_count-1)*total_ts : match_count*total_ts-1, 'Period':'Payoff2'] \
-                     = self.match_result[0:total_ts, 0:7]
-                
-                print("\nGame {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
-                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str1), score1, score1/total_ts))
-                print("total score of {0}: {1:.3f}, per stage: {2:.3f}".format(self.str_name(str2), score2, score2/total_ts))
-                result[i][i+j+1] = score1
-                result[i+j+1][i] = score2
-                match_count += 1
+                    # play game
+                    for r in range(self.repeat):
+                        round_ts_length = ts_list[r]
+                        s1, s2 = self.__play__(str1, str2, mtype, round_ts_length, random_state, record)
+                        score1 += s1
+                        score2 += s2
+                        average_score1 += s1 / ts_list[r]
+                        average_score2 += s2 / ts_list[r]
+
+                    if record:
+                        count_ts += round_ts_length
+                        self.record_df.loc[(match_count-1)*total_ts : match_count*total_ts-1, 'Period':'Payoff2'] \
+                         = self.match_result[0:total_ts, 0:7]
+                    
+                    print("\nGame {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
+                    print("{0}: session average is {1:.3f}, stage average is {2:.3f}".format(self.str_name(str1), average_score1/self.repeat, score1/total_ts))
+                    print("{0}: session average is {1:.3f}, stage average is {2:.3f}".format(self.str_name(str2), average_score2/self.repeat, score2/total_ts))
+                    result_total_ave[i][j] += score1 / total_ts / 2
+                    result_total_ave[j][i] += score2 / total_ts / 2
+                    result_session_ave[i][j] += average_score1 / self.repeat / 2
+                    result_session_ave[j][i] += average_score2 / self.repeat / 2
+                    match_count += 1
         
         print("\nScore table:")
-        print(result)
-        print("\nRanking:")
+        print("各セッションを重率1で平均した得点")
+        print(result_session_ave)
+        print("")
+        print("各ステージゲームを重率1で平均した得点")
+        print(result_total_ave)
+
+        print("\nRanking\n-------")
+
+        # ランキング作成
         total = np.zeros(strlen, dtype=float)
         for i in range(strlen):
-            total[i] = np.sum(result[i])
-        
+            total[i] = np.sum(result_session_ave[i]) / (strlen-1)
         ranking = np.argsort(total)[::-1]
+
         for i in range(strlen):
             s = ranking[i]
             print("{0}. \"{1}\"".format(i+1, self.str_name(self.strategies[s])))
-            print("total points: {0:.3f}, average points per match: {1:.3f}, average points per stage: {2:.3f}"
-                .format( total[s], total[s]/(strlen-1), total[s]/((strlen-1)*total_ts) ))
+            print("セッションを重率1で平均: {0:.3f}, ステージゲームを重率1で平均: {1:.3f}\n"
+                .format( total[s], np.sum(result_total_ave[s])/(strlen-1) ))
 
         if record:
             current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
@@ -371,12 +389,13 @@ class RepeatedMatrixGame(object):
 
 if __name__ == '__main__':
     payoff = np.array([[4, 0], [5, 2]])
-    seed = 11451
+    seed = 282
     rs = np.random.RandomState(seed)
     
     # 第1期は確率1で来るものとする
     discount_v = 0.97
-    ts_length = rs.geometric(p=1-discount_v, size=1000) + 1
+    ts_length = rs.geometric(p=1-discount_v, size=1000)
+
 
     # プロジェクトが成功か失敗かを返す
     def public_signal(actions):
@@ -418,9 +437,7 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-    strategies = [AllC, AllD, MyStrategy, GrimTrigger]
+    strategies = [AllC, AllD, GrimTrigger]
     game = RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)
-    game.play(mtype="private", random_seed=seed, record=True)
-
-
+    game.play(mtype="private", random_seed=seed, record=False)
 
