@@ -12,7 +12,7 @@
 の3パターンの実験を行います。
 
 ## 実験結果（11月30日実験結果）
-[iPython notebook](./Experiment%202015-11-30.ipynb)
+[iPython notebook](./Experiment-2015-11-30.ipynb)
 
 ## ルール
 
