@@ -12,7 +12,7 @@
 の3パターンの実験を行います。
 
 ## 実験結果（11月30日実験結果）
-[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment%202015-11-30.ipynb)
+[iPython notebook](./Experiment%202015-11-30.ipynb)
 
 ## ルール
 
