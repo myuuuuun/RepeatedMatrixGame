@@ -9,7 +9,7 @@
 4. imperfect private monitoring（神取ゼミの戦略のみ）
 5. imperfect private monitoring（神取+尾山ゼミ）
 
-の3パターンの実験を行います。
+の5パターンの実験を行います。
 
 ## 実験結果（11月30日実験結果）
 [iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)
