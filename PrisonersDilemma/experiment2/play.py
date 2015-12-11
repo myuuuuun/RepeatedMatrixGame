@@ -167,7 +167,7 @@ class RepeatedMatrixGame(object):
         print("The object has {0} strategy functions below".format(len(self.strategies)))
         print("-"*50)
         for i, s in enumerate(self.strategies):
-            print(i+1, self.str_name(s))
+            print("{0}.".format(i+1), self.str_name(s))
         print("-"*50)
 
     def remove_strategies(self, str_name):
@@ -325,10 +325,7 @@ class RepeatedMatrixGame(object):
         # play match
         for i, str1 in enumerate(self.strategies):
             for j, str2 in enumerate(self.strategies):
-                if i == j:
-                    pass
-
-                else:
+                if i != j:
                     if record:
                         count_ts = 0
                         self.record_df['Strategy1'][(match_count-1) * total_ts : match_count * total_ts] = i+1
@@ -368,7 +365,7 @@ class RepeatedMatrixGame(object):
         print("各ステージゲームを重率1で平均した得点")
         print(result_total_ave)
 
-        print("\nRanking\n-------")
+        print("\nRanking:")
 
         # ランキング作成
         total = np.zeros(strlen, dtype=float)
@@ -379,7 +376,7 @@ class RepeatedMatrixGame(object):
         for i in range(strlen):
             s = ranking[i]
             print("{0}. \"{1}\"".format(i+1, self.str_name(self.strategies[s])))
-            print("セッションを重率1で平均: {0:.3f}, ステージゲームを重率1で平均: {1:.3f}\n"
+            print("   セッションを重率1で平均: {0:.3f}, ステージゲームを重率1で平均: {1:.3f}\n"
                 .format( total[s], np.sum(result_total_ave[s])/(strlen-1) ))
 
         if record:
@@ -440,4 +437,5 @@ if __name__ == '__main__':
     strategies = [AllC, AllD, GrimTrigger]
     game = RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)
     game.play(mtype="private", random_seed=seed, record=False)
+
 
