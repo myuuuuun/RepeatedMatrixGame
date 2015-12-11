@@ -1,10 +1,18 @@
-# 繰り返し囚人のジレンマゲームの実験2
+# 繰り返し囚人のジレンマゲームの実験3
 
 実験1と同様に、プログラム同士で繰り返し囚人のジレンマゲームをプレイし、どんな戦略が最も大きな利得を得られるかを実験します。 
-今回はperfect monitoring, imperfect public monitoring, imperfect private monitoringの3パターンの実験を行います。
+今回は
 
-## 実験結果（10月26日追加）
-[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment2/Experiment%202015-10-19.ipynb), [実験結果(csv)](https://drive.google.com/open?id=0B2s1Ez2EuFfUcFNtUHpzTVBiN00)
+1. perfect monitoring
+2. imperfect public monitoring
+3. imperfect private monitoring（尾山ゼミの戦略のみ）
+4. imperfect private monitoring（神取ゼミの戦略のみ）
+5. imperfect private monitoring（神取+尾山ゼミ）
+
+の3パターンの実験を行います。
+
+## 実験結果（11月30日実験結果）
+[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment%202015-11-30.ipynb)
 
 ## ルール
 
