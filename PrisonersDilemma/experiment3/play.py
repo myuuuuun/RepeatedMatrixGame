@@ -374,7 +374,7 @@ class RepeatedMatrixGame(object):
                         self.record_df.loc[(match_count-1)*total_ts : match_count*total_ts-1, 'Period':'Payoff2'] \
                          = self.match_result[0:total_ts, 0:7]
                     
-                    print("Game {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
+                    #print("Game {0}: \"{1}\" vs \"{2}\"".format(match_count, self.str_name(str1), self.str_name(str2)))
                     total_average[i][j] += score1 / total_ts / 2
                     total_average[j][i] += score2 / total_ts / 2
                     session_average[i][j] += average_score1 / self.repeat / 2
