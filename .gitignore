@@ -55,7 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
-PrisonersDilemma/experiment2/.ipynb_checkpoints
 record_2015-11-13-07-26-27.csv
 record_imperfect_private.csv
 record_imperfect_private2.csv
