@@ -13,8 +13,8 @@
 
 ## 実験結果（11月30日実験結果）
 [iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
-[実験結果(pdf)]()  
-[実験結果資料(pdf)]()  
+[実験結果(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E3%82%BC%E3%83%9F%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C.pdf)  
+[実験結果資料(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf)  
 
 ## ルール
 
