@@ -16,6 +16,16 @@ import numpy as np
 import pandas as pd
 import itertools
 import matplotlib.pyplot as plt
+from Iida_imperfect_private import Iida_iprm
+from kato import KatoStrategy
+from ikegami_imperfect_private import Self_Centered_private
+from mhanami_Imperfect_Private_Strategy import ImPrivStrategy
+from tsuyoshi import GrimTrigger
+from gistfile1 import MyStrategy
+from beeleb_Strategy import beeleb
+from oyama import OyamaImperfectPrivateMonitoring
+from ogawa import ogawa
+from yamagishi_impd import yamagishi
 np.set_printoptions(precision=3)
 pd.set_option('display.max_columns', 30)
 pd.set_option('display.width', 400)
@@ -446,9 +456,9 @@ class RepeatedMatrixGame(object):
             set_result_df.to_csv("./experiment_" + str(current_time) + "/set_result.csv")
 
             # 平均利得表を記録
-            session_average_df = pd.DataFrame(session_average)
+            session_average_df = pd.DataFrame(session_average, index=list(range(1, strlen+1)), columns=list(range(1, strlen+1)))
             session_average_df.to_csv("./experiment_" + str(current_time) + "/session_average.csv")
-            total_average_df = pd.DataFrame(total_average)
+            total_average_df = pd.DataFrame(total_average, index=list(range(1, strlen+1)), columns=list(range(1, strlen+1)))
             total_average_df.to_csv("./experiment_" + str(current_time) + "/total_average.csv")
 
  
@@ -495,9 +505,9 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-    strategies = [Iida_iprm, KatoStrategy, Self_Centered_private, ImPrivStrategy, GrimTrigger, MyStrategy, beeleb, OyamaImperfectPrivateMonitoring, ogawa, yamagishi]
+    strategies = [Iida_iprm, KatoStrategy, Self_Centered_private]
     game = RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)
-    game.play(mtype="private", random_seed=seed, record=False)
+    game.play(mtype="private", random_seed=seed, record=True)
 
 
 

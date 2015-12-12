@@ -20,51 +20,49 @@ pd.set_option('display.width', 1400)
 
 if __name__ == '__main__':
     rounds = 1000 * 2
-    strategies = 24
+    strategies = 34
     max_ts = 100
 
     # 読み込み
-    df = pd.read_csv('./contest4/data/set_result.csv', index_col=[0, 1], header=[0, 1])
+    df = pd.read_csv('../contest5/data/set_result.csv', index_col=[0, 1], header=[0, 1])
 
+    # ts_lengthの長い順に並び替え
+    ordered_df = df.sortlevel(level="ts_length")
 
-    # 行: プレイヤー, 列: 1000*2セッション分の平均利得
-    average_matrix = np.zeros((rounds*(strategies-1), strategies), dtype=float)
+    # 行: プレイヤー, 列: ts_lengthが1〜100期の時の平均利得
+    average_matrix = np.zeros((strategies, max_ts), dtype=float)
+
+    for t in range(1, max_ts+1):
+        df_t = df.iloc[df.index.get_level_values('ts_length') == t]
+
+        for s in range(1, strategies+1):
+            average = df_t[str(s)].mean().mean()
+            average_matrix[s-1, t-1] = average
+
+    fig, ax = plt.subplots(figsize=(20, 10))
+    plt.title("average payoff trend")
+    plt.xlabel("ts_length")
+    plt.ylabel("average payoff")
+    t_list = [i for i in range(1, max_ts+1)]
 
     for s in range(1, strategies+1):
-        for i, opponent in enumerate(df[str(s)].columns.values):
-            average_matrix[i*rounds:(i+1)*rounds, s-1] = df[str(s)][str(opponent)]
+        if s in [27, 28, 18, 13, 9, 8]:
+            pass
+        else:
+            average_list = average_matrix[s-1]
+            plt.plot(t_list, average_list, color='#bbbbbb')
 
-    
-    av_df = pd.DataFrame(average_matrix, columns=list(range(1, strategies+1)))
-    print(av_df.describe())
+    plt.plot(t_list, average_matrix[27-1], color='red', linewidth=2, label="27 (20%)")
+    plt.plot(t_list, average_matrix[28-1], color='blue', linewidth=2, label="28 (2T2FT)")
+    plt.plot(t_list, average_matrix[19-1], color='magenta', linewidth=2, label="19 (TFT)")
+    plt.plot(t_list, average_matrix[18-1], color='green', linewidth=2, label="18 (WSLS’)")
+    plt.plot(t_list, average_matrix[13-1], color='purple', linewidth=2, label="13 (CCDDDD)")
+    plt.plot(t_list, average_matrix[9-1], color='brown', linewidth=2, label="9 (STFT)")
+    plt.plot(t_list, average_matrix[8-1], color='orange', linewidth=2, label="8 (HIST)")
 
-    
-
-    averages = np.zeros(strategies, dtype=float)
-    stds = np.zeros(strategies, dtype=float)
-    ranking = np.zeros(strategies, dtype=int)
-    for i in range(strategies):
-        averages[i] = average_matrix[:, i].mean()
-        stds[i] = average_matrix[:, i].std()
-    ranking = np.argsort(averages)[::-1]+1
-
-    for i in range(strategies):
-        print(np.where(ranking == i+1)[0][0]+1)
-    
-    """
-    fig, ax = plt.subplots()
-    bp = ax.boxplot(average_matrix, 0, '')
-    plt.grid()
-    plt.xlabel('戦略番号')
-    plt.ylabel('1セッションの平均利得')
-    ax.set_xlim([0, strategies+1])
-    ax.set_ylim([-0.1, 5.8])
-    plt.title('戦略別, 全セッションの平均利得の分布')
-    ax.text(0.4, 5.3, "rank\nave\nstd", ha = 'center', va = 'center', color="black")
-    for i in range(strategies):
-        ax.text(i+1, 5.3, "{0:.0f}\n{1:.3f}\n{2:.3f}".format(np.where(ranking == i+1)[0][0]+1, averages[i], stds[i]), ha = 'center', va = 'center', color="black")
+    plt.legend()
     plt.show()
-    """
+
    
 
 

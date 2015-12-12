@@ -12,7 +12,9 @@
 の5パターンの実験を行います。
 
 ## 実験結果（11月30日実験結果）
-[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)
+[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
+[実験結果(pdf)]()  
+[実験結果資料(pdf)]()  
 
 ## ルール
 
