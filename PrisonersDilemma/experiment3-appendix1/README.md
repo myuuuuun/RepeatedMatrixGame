@@ -4,8 +4,7 @@
 
 ## 実験結果（12月28日実験結果）
 [iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
-実験結果(pdf): 未完成
-実験結果資料(pdf): 未完成  
+pdf版資料 → [実験3](../experiment3) に掲載
 
 
 

@@ -11,15 +11,20 @@
 
 の5パターンの実験を行います。
 
-## 実験結果（1月20日追記）
+## 実験結果（1月20日更新）
+### 
 * [実験結果（iPython notebook版）](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
 * [実験結果(pdf版)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E3%82%BC%E3%83%9F%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C.pdf)  
+### 資料, Appendix
+* [対戦別平均利得表（自分との対戦無し）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%AF%BE%E6%88%A6%E8%A1%A8%EF%BC%88%E8%87%AA%E5%88%86%E3%81%A8%E3%81%AE%E5%AF%BE%E6%88%A6%E7%84%A1%EF%BC%89.pdf) 
+* [対戦別平均利得表（自分との対戦有り）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%AF%BE%E6%88%A6%E8%A1%A8%EF%BC%88%E8%87%AA%E5%88%86%E3%81%A8%E3%81%AE%E5%AF%BE%E6%88%A6%E6%9C%89%EF%BC%89.pdf) 
 
-* [対戦別平均利得表（自分との対戦無し）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf) 
-* [対戦別平均利得表（自分との対戦有り）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf) 
+* [Appendix1 期数の分布について](http://nbviewer.jupyter.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/ts_length.ipynb)
+* [Appendix2 自分との対戦の有無による結果の比較（pdf版）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Appendix2.pdf)
 
-* [Appendix1 期数の分布について](../experiment3-appendix1)
-* [Appendix2 自分との対戦の有無による結果の比較](../experiment3-appendix1)
+#### Appendix2の元データ
+[自分との対戦を許した場合の実験結果（iPython notebook版）](http://nbviewer.jupyter.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)
+[Summary, 対戦別利得表, タイプ別利得表の集計結果（xlsxファイル）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3-appendix1/documents/%E5%AF%BE%E6%88%A6%E6%9C%89%E7%84%A1%E6%AF%94%E8%BC%83.xlsx)
 
 ## ルール
 
