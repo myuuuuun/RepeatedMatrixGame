@@ -1,6 +1,8 @@
-#!/usr/bin/python
 #-*- encoding: utf-8 -*-
 """
+Graph func for experiment3
+boxplot and fundamental statistics
+
 Copyright (c) 2015 @myuuuuun
 Released under the MIT license.
 """
@@ -19,7 +21,8 @@ pd.set_option('display.max_columns', 30)
 pd.set_option('display.width', 400)
 
 # 日本語対応
-mpl.rcParams['font.family'] = 'IPAexGothic'
+mpl.rcParams['font.family'] = 'Osaka'
+plt.rcParams['font.size'] = 14
 
 
 if __name__ == '__main__':
@@ -45,7 +48,7 @@ if __name__ == '__main__':
         stds[i] = average_matrix[:, i].std()
     ranking = np.argsort(averages)[::-1]+1
 
-    fig, ax = plt.subplots(figsize=(28, 12))
+    fig, ax = plt.subplots(figsize=(24, 12))
     bp = ax.boxplot(average_matrix, 0, '')
     plt.grid()
     plt.xlabel('戦略番号')
@@ -53,12 +56,26 @@ if __name__ == '__main__':
     ax.set_xlim([0, strategies+0.5])
     ax.set_ylim([-0.1, 5.8])
     plt.title('戦略別, 全セッションの平均利得の分布')
-    ax.text(0.1, 5.3, "ranking\nave\nstd", ha = 'center', va = 'center', color="black", size=14)
+    ax.text(0.1, 5.3, "ranking\nave\nstd", ha = 'center', va = 'center', color="black", size=12)
     for i in range(strategies):
         ax.text(i+1, 5.3, "{0:.0f}\n{1:.3f}\n{2:.3f}"
-                .format(np.where(ranking == i+1)[0][0]+1, averages[i], stds[i]), ha = 'center', va = 'center', color="black", size=14)
+                .format(np.where(ranking == i+1)[0][0]+1, averages[i], stds[i]), ha = 'center', va = 'center', color="black", size=12)
 
     plt.show()
+
+
+    # fundamental statistics
+    """
+    a_df = pd.DataFrame(average_matrix, columns=range(1, strategies+1))
+    statistics = a_df.describe()
+    # add ranking row
+    df2 = pd.DataFrame([[np.where(ranking == i+1)[0][0]+1 for i in range(strategies)]], columns=range(1, strategies+1), dtype=int, index=["ranking"])
+    frames = [df2, statistics]
+    statistics = pd.concat(frames)
+    statistics.columns.names = ["Str No."]
+    print(statistics)
+    """
+    
 
 
 

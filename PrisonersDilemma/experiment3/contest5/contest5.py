@@ -23,7 +23,6 @@ from beeleb_Strategy import beeleb
 from oyama import OyamaImperfectPrivateMonitoring
 from ogawa import ogawa
 from yamagishi_impd import yamagishi
-from prob2 import prob2
 np.set_printoptions(precision=3)
 
 
@@ -58,7 +57,7 @@ if __name__ == '__main__':
                     Strategy11, Strategy12, Strategy13, Strategy14, Strategy15,
                     Strategy16, Strategy17, Strategy18, Strategy19, Strategy20, 
                     Strategy21, Strategy22, Strategy23, Strategy24, 
-                    Iida_iprm, KatoStrategy, prob2, ImPrivStrategy,
+                    Iida_iprm, KatoStrategy, Self_Centered_private, ImPrivStrategy,
                     GrimTrigger, MyStrategy, beeleb, OyamaImperfectPrivateMonitoring, ogawa, yamagishi]
 
     game = pl.RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)

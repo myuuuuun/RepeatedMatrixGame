@@ -1,6 +1,9 @@
 #!/usr/bin/python
 #-*- encoding: utf-8 -*-
 """
+Graph func for experiment3
+average payoff trend
+
 Copyright (c) 2015 @myuuuuun
 Released under the MIT license.
 """
@@ -8,6 +11,7 @@ import math
 import numpy as np
 import pandas as pd
 import functools
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 EPSIRON = 1.0e-8
@@ -16,7 +20,10 @@ np.set_printoptions(linewidth=400)
 np.set_printoptions(threshold=np.nan)
 pd.set_option('display.max_columns', 130)
 pd.set_option('display.width', 1400)
+plt.rcParams['font.size'] = 14
 
+# 日本語対応
+mpl.rcParams['font.family'] = 'Osaka'
 
 if __name__ == '__main__':
     rounds = 1000 * 2

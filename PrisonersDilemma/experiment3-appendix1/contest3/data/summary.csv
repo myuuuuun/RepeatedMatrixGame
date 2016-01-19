@@ -1,0 +1,17 @@
+Datetime,2015-12-28-05-44-20,,,,
+Monitoring type,private,,,,
+RandomSeed,282,,,,
+Repeats,1000,,,,
+Average ts_length,32.856,,,,
+Number of strategies,10,,,,
+Str_numbers,Strategy name,Avarage(session based),Rank(session based),Avarage(stage based),Rank(stage based)
+1,Iida_imperfect_private.Iida_iprm,3.36607561063,8,3.07902209642,8
+2,mhanami_Imperfect_Private_Strategy.ImPrivStrategy,3.48139166322,3,3.29370586803,2
+3,kato.KatoStrategy,3.14861467541,10,2.82155161919,10
+4,ikegami_imperfect_private.Self_Centered_private,3.3689367926,7,3.14127860969,6
+5,tsuyoshi.GrimTrigger,3.28006289031,9,2.98329376674,9
+6,gistfile1.MyStrategy,3.48275531621,2,3.29020878987,3
+7,beeleb_Strategy.beeleb,3.51254778366,1,3.36451637448,1
+8,oyama.OyamaImperfectPrivateMonitoring,3.42040439346,5,3.19399196494,5
+9,ogawa.ogawa,3.40728404648,6,3.09949172145,7
+10,yamagishi_impd.yamagishi,3.42390276014,4,3.21174519114,4

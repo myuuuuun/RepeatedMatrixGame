@@ -11,10 +11,15 @@
 
 の5パターンの実験を行います。
 
-## 実験結果（11月30日実験結果）
-[iPython notebook](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
-[実験結果(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E3%82%BC%E3%83%9F%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C.pdf)  
-[実験結果資料(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf)  
+## 実験結果（1月20日追記）
+* [実験結果（iPython notebook版）](http://nbviewer.ipython.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Experiment-2015-11-30.ipynb)  
+* [実験結果(pdf版)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E3%82%BC%E3%83%9F%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C.pdf)  
+
+* [対戦別平均利得表（自分との対戦無し）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf) 
+* [対戦別平均利得表（自分との対戦有り）(pdf)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%B0%BE%E5%B1%B1%E5%AE%9F%E9%A8%93%E7%B5%90%E6%9E%9C%E8%B3%87%E6%96%991.pdf) 
+
+* [Appendix1 期数の分布について](../experiment3-appendix1)
+* [Appendix2 自分との対戦の有無による結果の比較](../experiment3-appendix1)
 
 ## ルール
 
@@ -43,7 +48,8 @@
   
 ゲームを何期続けるかは、以下のルールによって決めます。
 
-* 現在n期とすると、**n+1期が来る確率は97%**（n=0, 1, 2,...）  
+1. 第1期は確率1で到来する
+2. 以降は毎期末に抽選を行い、**97%の確率でゲームを継続する**  
 （これは、無限回繰り返しゲームにおいて現在割引価値を0.97と取ることを意味します）
 
 平均は33.33期になります（第1期は確率1で来るものとします）。

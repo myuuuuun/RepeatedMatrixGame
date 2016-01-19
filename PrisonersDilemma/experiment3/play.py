@@ -1,9 +1,13 @@
 #-*- encoding: utf-8 -*-
 '''
-Simulate finite repeated symmetric matrix game.
+Simulate Repeated Prisoner's Dilemma.
 Copyright (c) 2015 @myuuuuun
 
 Released under the MIT license.
+'''
+
+'''
+Play Function for Experiment3.
 '''
 
 # for python2
@@ -16,16 +20,6 @@ import numpy as np
 import pandas as pd
 import itertools
 import matplotlib.pyplot as plt
-from Iida_imperfect_private import Iida_iprm
-from kato import KatoStrategy
-from ikegami_imperfect_private import Self_Centered_private
-from mhanami_Imperfect_Private_Strategy import ImPrivStrategy
-from tsuyoshi import GrimTrigger
-from gistfile1 import MyStrategy
-from beeleb_Strategy import beeleb
-from oyama import OyamaImperfectPrivateMonitoring
-from ogawa import ogawa
-from yamagishi_impd import yamagishi
 np.set_printoptions(precision=3)
 pd.set_option('display.max_columns', 30)
 pd.set_option('display.width', 400)
@@ -426,7 +420,7 @@ class RepeatedMatrixGame(object):
                       ["Repeats", self.repeat],
                       ["Average ts_length", np.average(ts_list)],
                       ["Number of strategies", strlen],
-                      ["Str_numbers", "Strategy name", "Avarage(session based)", "Rank(session based)", "Avarage(stage based)", "Rank(stage based)"]]
+                      ["Str No.", "Strategy name", "Average(session based)", "Rank(session based)", "Average(stage based)", "Rank(stage based)"]]
 
             cor = [[i+1,
                     self.str_name(strategy),
@@ -460,54 +454,6 @@ class RepeatedMatrixGame(object):
             session_average_df.to_csv("./experiment_" + str(current_time) + "/session_average.csv")
             total_average_df = pd.DataFrame(total_average, index=list(range(1, strlen+1)), columns=list(range(1, strlen+1)))
             total_average_df.to_csv("./experiment_" + str(current_time) + "/total_average.csv")
-
- 
-if __name__ == '__main__':
-    payoff = np.array([[4, 0], [5, 2]])
-    seed = 282
-    
-    # 第1期は確率1で来るものとする
-    discount_v = 0.97
-    ts_length = np.random.RandomState(seed).geometric(p=1-discount_v, size=1000)
-
-
-    # プロジェクトが成功か失敗かを返す
-    def public_signal(actions, random_state):
-        prob = random_state.uniform()
-        if actions[0] == 0 and actions[1] == 0:
-            return 0 if prob < 0.9 else 1
-        elif (actions[0] == 0 and actions[1] == 1) or (actions[0] == 1 and actions[1] == 0):
-            return 0 if prob < 0.5 else 1
-        elif actions[0] == 1 and actions[1] == 1:
-            return 0 if prob < 0.2 else 1
-        else:
-            raise ValueError
-
-
-    # 「相手の」シグナルが協調か攻撃かを（ノイズ付きで）返す
-    def private_signal(actions, random_state):
-        pattern = [[0, 0], [0, 1], [1, 0], [1, 1]]
-        # 例えば実際の行動が(0, 1)なら、シグナルは(1, 0)である可能性が最も高い
-        signal_probs = [[.9, .02, .02, .06], [.02, .06, .9, .02], [.02, .9, .06, .02], [.06, .02, .02, .9]]
-        prob = random_state.uniform()
-        if actions[0] == 0 and actions[1] == 0:
-            choice = random_state.choice(4, p=signal_probs[0])
-            return pattern[choice]
-        elif actions[0] == 0 and actions[1] == 1:
-            choice = random_state.choice(4, p=signal_probs[1])
-            return pattern[choice]
-        elif actions[0] == 1 and actions[1] == 0:
-            choice = random_state.choice(4, p=signal_probs[2])
-            return pattern[choice]
-        elif actions[0] == 1 and actions[1] == 1:
-            choice = random_state.choice(4, p=signal_probs[3])
-            return pattern[choice]
-        else:
-            raise ValueError
-
-    strategies = [Iida_iprm, KatoStrategy, Self_Centered_private]
-    game = RepeatedMatrixGame(payoff, strategies, signal=private_signal, ts_length=ts_length, repeat=1000)
-    game.play(mtype="private", random_seed=seed, record=True)
 
 
 
