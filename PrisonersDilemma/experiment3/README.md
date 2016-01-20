@@ -21,7 +21,7 @@
 * [対戦別平均利得表（自分との対戦無し）(pdf版)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%AF%BE%E6%88%A6%E8%A1%A8%EF%BC%88%E8%87%AA%E5%88%86%E3%81%A8%E3%81%AE%E5%AF%BE%E6%88%A6%E7%84%A1%EF%BC%89.pdf)
 , [（xlsx版）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/documents/match_data.xlsx)
 * [対戦別平均利得表（自分との対戦有り）(pdf版)](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/%E5%AF%BE%E6%88%A6%E8%A1%A8%EF%BC%88%E8%87%AA%E5%88%86%E3%81%A8%E3%81%AE%E5%AF%BE%E6%88%A6%E6%9C%89%EF%BC%89.pdf)
-, [（xlsx版）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3-appendix1/documents/match_data.xls)
+, [（xlsx版）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3-appendix1/documents/match_data.xlsx)
 * [Appendix1 期数の分布について](http://nbviewer.jupyter.org/github/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/ts_length.ipynb)
 * [Appendix2 自分との対戦の有無による結果の比較（pdf版）](https://github.com/myuuuuun/RepeatedMatrixGame/blob/master/PrisonersDilemma/experiment3/Appendix2.pdf)
 
